@@ -10,7 +10,6 @@ config.read('settings.cfg')
 TOKEN = config['BOT']['Token']
 GUILD = config['BOT']['Guild']
 CHANNEL_ID = config['BOT']['Channel_ID']
-DEV = config['BOT']['Dev']
 
 DESCRIPTION = '''Im here to help'''
 VERSION = "CraftersBot V0.1-dev"
@@ -42,9 +41,6 @@ RestartCommand.run(Bot, GUILD, CHANNEL_ID)
 
 # !Status [server]
 StatusCommand.run(Bot, GUILD, CHANNEL_ID)
-
-# !SelfUpdate
-SelfUpdateCommand.run(Bot, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)
 
 
 

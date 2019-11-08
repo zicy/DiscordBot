@@ -1,0 +1,9 @@
+[BOT]
+Token = "TOKEN"
+Guild = "GUILD"
+Channel_ID ="CHANNEL_ID"
+Dev = False
+
+[UPDATE]
+Url = https://github.com/zicy/DiscordBot/archive/master.zip
+SaveFile = update.zip

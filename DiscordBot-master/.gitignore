@@ -3,10 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Custom ignore file
+# Ignore config file
 settings.cfg
 DiscordBot.sln
-update.zip
 
 # User-specific files
 *.suo
