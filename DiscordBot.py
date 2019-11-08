@@ -46,6 +46,9 @@ StatusCommand.run(Bot, GUILD, CHANNEL_ID)
 # !SelfUpdate
 SelfUpdateCommand.run(Bot, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)
 
+# !SelfStop
+SelfStopCommand.run(Bot)
+
 
 
 
