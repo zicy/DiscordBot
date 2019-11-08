@@ -12,6 +12,7 @@ def run(Bot, URL, SAVEFILE, DEV):
     @Bot.command(name="selfupdate")
     async def _cmd(ctx):
         
+
         # Fetch update ZIP
         await ctx.send("Beginning file download with urllib2...")
         urllib.request.urlretrieve(URL, SAVEFILE)
@@ -22,14 +23,14 @@ def run(Bot, URL, SAVEFILE, DEV):
                zip_ref.extractall()
         
         # Move file from extracted folder to current folder
-        if DEV == False:
-            os.system("mv DiscordBot-master/* . -R")
+        if DEV == "False":
+            os.system("cp -r DiscordBot-master/* .")
          
         # Start new DiscordBot
         await ctx.send("Done")
         await ctx.send("Restarting . . .")
         await ctx.bot.close()
-        if DEV == False:
+        if DEV == "False":
             os.system("DiscordBot.py")
 
 
