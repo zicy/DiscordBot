@@ -41,7 +41,7 @@ RconCommand.run(Bot, GUILD, CHANNEL_ID)
 RestartCommand.run(Bot, GUILD, CHANNEL_ID)
 
 # !Status [server]
-StatusCommand.run(Bot, GUILD, CHANNEL_ID)
+StatusCommand.run(Bot, config, GUILD, CHANNEL_ID)
 
 # !SelfUpdate
 SelfUpdateCommand.run(Bot, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)

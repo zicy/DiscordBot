@@ -7,3 +7,6 @@ Dev = False
 [UPDATE]
 Url = https://github.com/zicy/DiscordBot/archive/master.zip
 SaveFile = update.zip
+
+[SCRIPT]
+Path = /home/minecraft/script/

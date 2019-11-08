@@ -3,7 +3,7 @@ import os
 from discord.ext import commands
 
 
-def run(Bot, GUILD, CHANNEL_ID):
+def run(Bot, config, GUILD, CHANNEL_ID):
 
     #Bot = self.bot
 
@@ -11,9 +11,11 @@ def run(Bot, GUILD, CHANNEL_ID):
     async def _cmd(ctx):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):
-                cmd = "Status.sh"
+                cmd = config['SCRIPT']['Path'] + "test.cmd"
                 if os.path.exists(cmd):
                     await ctx.send("Running " + cmd +  " ...")
+                    msg = os.popen(cmd).read()
+                    await ctx.send("'''" + msg + "'''")
                 else:        
                     await ctx.send("Error! " + cmd + " don't exist")
 
