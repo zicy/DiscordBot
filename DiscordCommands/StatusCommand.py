@@ -11,12 +11,18 @@ def run(Bot, config, GUILD, CHANNEL_ID):
             if ctx.message.channel.id == int(CHANNEL_ID):
                 CMD_PATH = config['SCRIPT']['Path']
                 CMD = "test.cmd"
-                if os.path.exists(CMD_PATH):
+                if os.path.exists(CMD_PATH + CMD):
                     await ctx.send("Running " + CMD +  " ...")
-                    msg = os.popen(CMD_PATH, CMD).read()
+
+                    try:
+                        msg = os.popen(CMD_PATH + CMD).read()
+                    except OSError as e:
+                        msg = "Error: " + e
+                    except:
+                        msg = "Unkown error occurred!"
                     await ctx.send("```" + msg + "```")
                 else:        
-                    await ctx.send("Error! " + CMD_PATH + " don't exist")
+                    await ctx.send("Error! " + CMD_PATH + CMD + " don't exist")
 
     @_cmd.error
     async def _cmd_error(ctx, error):

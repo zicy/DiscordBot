@@ -4,10 +4,12 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Custom ignore file
-settings.cfg
-DiscordBot.sln
-update.zip
-DiscordBot-master/
+/settings.cfg
+/DiscordBot.sln
+/update.zip
+/test.cmd
+/DiscordBot-master/
+
 
 # User-specific files
 *.suo
@@ -334,3 +336,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/test.cmd
