@@ -1,5 +1,6 @@
 import discord
 import os
+import asyncio
 from discord.ext import commands
 
 
@@ -14,13 +15,14 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                 if os.path.exists(CMD_PATH + CMD):
                     await ctx.send("Running " + CMD +  " ...")
 
-                    try:
-                        msg = os.popen(CMD_PATH + CMD).read()
-                    except OSError as e:
-                        msg = "Error: " + e
-                    except:
-                        msg = "Unkown error occurred!"
-                    await ctx.send("```" + msg + "```")
+                    proc = await asyncio.create_subprocess_shell(CMD_PATH + CMD, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+                    out, err = await proc.communicate()
+
+                    if out:
+                        await ctx.send("```\n [" + CMD + "]\n" + out.decode() + " \n```")
+                    if err:
+                        await ctx.send("```\n [" + CMD + "]\n" + err.decode() + " \n```")
+
                 else:        
                     await ctx.send("Error! " + CMD_PATH + CMD + " don't exist")
 
