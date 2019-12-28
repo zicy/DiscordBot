@@ -36,10 +36,10 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                     myresult = mycursor.fetchall()
 
                     for data in myresult:
-                        print("Id = ", data[0])
-                        print("Name  = ", data[1])
-                        print("IP = ", data[2])
-                        print("Game Port = ", data[3])
+                        #print("Id = ", data[0])
+                        #print("Name  = ", data[1])
+                        #print("IP = ", data[2])
+                        #print("Game Port = ", data[3])
 
                         id=data[0]
                         name=data[1]
@@ -48,8 +48,6 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                         print("\n")
 
                         # Default values
-                        query_error=0
-
                         online=0
                         latency=-1
                         players_online=0
@@ -73,47 +71,35 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                             description=status.description
 
                         except OSError as err:
-                            print(" Ping failed")
-                            print("  OS error: {0}".format(err))
+                            #print("Ping failed")
+                            #print("  OS error: {0}".format(err))
+                            await ctx.send(":thumbsdown: " + name + " did not answer ping...")
                         except AttributeError:
                             traceback.print_exc()
                         except:
                             print(" Unexpected error:", sys.exc_info()[0])
 
                         # Rating
-                        print("Ping result")
-                        print(" Online = ", online)
-                        print(" Latency = {0} ms".format(latency))
-                        print(" Players = ", players_online)
-                        print(" Max players = ", players_max)
-                        print(" Version = ", version)
+                        await ctx.send(":thumbsup: " + name + " Online \n Players: " + players_online + "/" + players_max + "")
 
-                        print("---------------------------------------------------------------------------------------------------------------")
-                        print("\n")
+                        #print("Ping result")
+                        #print(" Online = ", online)
+                        #print(" Latency = {0} ms".format(latency))
+                        #print(" Players = ", players_online)
+                        #print(" Max players = ", players_max)
+                        #print(" Version = ", version)
+
+                        #print("---------------------------------------------------------------------------------------------------------------")
+                        #print("\n")
 
                 except Error as e:
-                    print("Error reading data from MySQL table", e)
+                    #print("Error reading data from MySQL table", e)
+                    await ctx.send(":thumbsdown: Error reading data from MySQL table \n" + e)
                 finally:
                     if (conn.is_connected()):
                         conn.close()
                         mycursor.close()
-                        print("MySQL connection is closed")
-
-                #CMD_PATH = config['SCRIPT']['Path']
-                #CMD = "test.cmd"
-                #if os.path.exists(CMD_PATH + CMD):
-                #    await ctx.send("Running " + CMD +  " ...")
-
-                #    proc = await asyncio.create_subprocess_shell(CMD_PATH + CMD, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
-                #    out, err = await proc.communicate()
-
-                #    if out:
-                #        await ctx.send("```\n[" + CMD + "]\n" + out.decode() + "\n```")
-                #    if err:
-                #        await ctx.send("```\n[" + CMD + "]\n" + err.decode() + "\n```")
-
-                #else:        
-                #    await ctx.send("Error! " + CMD_PATH + CMD + " don't exist")
+                        #print("MySQL connection is closed")
 
     @_cmd.error
     async def _cmd_error(ctx, error):
