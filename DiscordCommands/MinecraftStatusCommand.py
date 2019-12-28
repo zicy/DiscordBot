@@ -13,15 +13,27 @@ from discord.ext import commands
 ### Status Script
 from mcstatus import MinecraftServer
 from mysql.connector import Error
+from datetime import datetime
 ### Status Script
 
 
 def run(Bot, config, GUILD, CHANNEL_ID):
 
     @Bot.command(name='status')
-    async def _cmd(ctx):
+    async def _cmd(ctx, *args):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):
+
+                select_query = ""
+                for var in args:
+                    select_query = select_query + "'" + var + "', "
+                    if var.lower() in ['a', 'all', 'alle']:
+                       select_query = ""
+                       break
+
+                if select_query != "":
+                    select_query = select_query[:-2]
+                    select_query = "AND name IN (" + select_query + ")"
 
                 try:
                     conn = mysql.connector.connect(
@@ -32,38 +44,25 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                     )
 
                     mycursor = conn.cursor()
-                    mycursor.execute("SELECT id,name,ip,game_port FROM mcp_server WHERE game_port != '0'")
+                    mycursor.execute("SELECT id,name,ip,game_port FROM mcp_server WHERE game_port != '0' " + select_query)
                     myresult = mycursor.fetchall()
 
                     for data in myresult:
-                        #print("Id = ", data[0])
-                        #print("Name  = ", data[1])
-                        #print("IP = ", data[2])
-                        #print("Game Port = ", data[3])
-
                         id=data[0]
                         name=data[1]
                         ip=data[2]
                         game_port=data[3]
-                        print("\n")
 
                         # Default values
-                        online=0
                         latency=-1
                         players_online=0
                         players_max=0
                         version="Unknown"
 
-
-                        print("Server List Ping")
                         try:
                             server = MinecraftServer.lookup("{0}:{1}".format(ip, game_port))
-                            # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
                             status = server.status()
-                            #print("The server has {0} players and replied in {1} ms".format(status.players.online, status.latency))
 
-                            print(" Ping successful")
-                            online=1
                             latency=format(status.latency)
                             players_online=format(status.players.online)
                             players_max=format(status.players.max)
@@ -71,38 +70,31 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                             description=status.description
 
                         except OSError as err:
-                            #print("Ping failed")
-                            #print("  OS error: {0}".format(err))
-                            await ctx.send(":thumbsdown: " + name + " did not answer ping...")
+                            embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
+                            embed.set_footer(text=datetime.now(tz=None))
+                            await ctx.send(embed=embed)
                         except AttributeError:
                             traceback.print_exc()
                         except:
-                            print(" Unexpected error:", sys.exc_info()[0])
+                            await ctx.send("Unexpected error:", sys.exc_info()[0])
+                            print("Unexpected error:", sys.exc_info()[0])
 
-                        # Rating
-                        await ctx.send(":thumbsup: " + name + " Online \n Players: " + players_online + "/" + players_max + "")
-
-                        #print("Ping result")
-                        #print(" Online = ", online)
-                        #print(" Latency = {0} ms".format(latency))
-                        #print(" Players = ", players_online)
-                        #print(" Max players = ", players_max)
-                        #print(" Version = ", version)
-
-                        #print("---------------------------------------------------------------------------------------------------------------")
-                        #print("\n")
+                        embed=discord.Embed(title=name, description="Online", color=0x185e0d)
+                        embed.add_field(name="Players ", value=players_online + "/" + players_max, inline=True)
+                        embed.add_field(name="Latency", value=latency, inline=True)
+                        embed.add_field(name="Version", value=version, inline=False)
+                        embed.set_footer(text=datetime.now(tz=None))
+                        await ctx.send(embed=embed)
 
                 except Error as e:
-                    #print("Error reading data from MySQL table", e)
                     await ctx.send(":thumbsdown: Error reading data from MySQL table \n" + e)
+                    print("Error reading data from MySQL table \n" + e)
                 finally:
                     if (conn.is_connected()):
                         conn.close()
                         mycursor.close()
-                        #print("MySQL connection is closed")
 
     @_cmd.error
     async def _cmd_error(ctx, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Unknown error!")
-    
