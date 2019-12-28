@@ -10,3 +10,9 @@ SaveFile = update.zip
 
 [SCRIPT]
 Path = /home/minecraft/script/
+
+[DATABASE]
+Host = localhost
+User = login
+Password = Password
+Database = Database
