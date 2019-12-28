@@ -2,6 +2,7 @@ import configparser
 import discord
 from discord.ext import commands
 from DiscordCommands import *
+from BackgroundTask import *
 
 config = configparser.ConfigParser()
 config.sections()
@@ -51,5 +52,5 @@ SelfStopCommand.run(Bot)
 
 
 
-
 Bot.run(TOKEN)
+Bot.add_cog(BackgroundTask.MinecraftServerMonitor(Bot))
