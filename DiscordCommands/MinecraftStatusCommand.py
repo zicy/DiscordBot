@@ -34,6 +34,9 @@ def run(Bot, config, GUILD, CHANNEL_ID):
                 if select_query != "":
                     select_query = select_query[:-2]
                     select_query = "AND name IN (" + select_query + ")"
+                else:
+                    await ctx.send("Ussage: !status <server> \nExample: !server novus")
+                    return
 
                 try:
                     conn = mysql.connector.connect(
