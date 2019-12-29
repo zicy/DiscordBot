@@ -1,4 +1,5 @@
 import configparser
+import logging
 import discord
 from discord.ext import commands
 from DiscordCommands import *
@@ -13,6 +14,12 @@ GUILD = int(config['BOT']['Guild'])
 CHANNEL_ID = int(config['BOT']['Channel_ID'])
 DEV = config['BOT']['Dev']
 
+logging.basicConfig(
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S')
+
+
 DESCRIPTION = '''Im here to help'''
 VERSION = "CraftersBot V0.1-dev"
 
@@ -20,30 +27,32 @@ Bot = commands.Bot(command_prefix="!", description=DESCRIPTION, case_insensitive
 
 @Bot.event
 async def on_ready():
-    print("Starting Bot,")
-    print("Version: " + VERSION)
-    print("Username: " + Bot.user.name)
-    print("Bot ID: " + str(Bot.user.id))
-    print("---[ Connected Servers]---")
+    logging.info("Starting Bot")
+    logging.info("Version: " + VERSION)
+    logging.info("Username: " + Bot.user.name)
+    logging.info("Bot ID: " + str(Bot.user.id))
+    logging.info("---[ Connected Servers]---")
     for Guild in Bot.guilds:
-        print("Guild ID: " + str(Guild.id) + " Name: " + Guild.name + " Member Count: " + str(Guild.member_count))
-    print("---[ Bot Started ]---")
+        logging.info("Guild ID: " + str(Guild.id) + " Name: " + Guild.name + " Member Count: " + str(Guild.member_count))
+    logging.info("---[ Bot Started ]---")
     await Bot.change_presence(status=discord.Status.idle, activity=discord.Activity(name=VERSION, type=1))
-    print("")
+    logging.info("")
 
-    Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Task(Bot, config, CHANNEL_ID))
+    Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Task(Bot, logging, config, CHANNEL_ID))
 
+def syslog():
+    pass
 
 # !Ping
 PingCommand.run(Bot, GUILD, CHANNEL_ID)
 
-# !Rcon [server] command
+# !Rcon <server> <command>
 RconCommand.run(Bot, GUILD, CHANNEL_ID)
 
-# !Restart <server> <delay>
+# !Restart <server> [delay]
 RestartCommand.run(Bot, GUILD, CHANNEL_ID)
 
-# !Status [server]
+# !Status <server|all>
 MinecraftStatusCommand.run(Bot, config, GUILD, CHANNEL_ID)
 
 # !SelfUpdate

@@ -16,7 +16,7 @@ from datetime import datetime
 ### Status Script
 
 
-async def Background_Monitor_Task(self, config, CHANNEL_ID):
+async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
     await self.wait_until_ready()
     channel = self.get_channel(CHANNEL_ID)
 
@@ -57,15 +57,17 @@ async def Background_Monitor_Task(self, config, CHANNEL_ID):
                     description=status.description
 
                 except OSError as err:
-                    print("Server: '" + name + "' OFFLINE")
+                    logging.info("Server: '" + name + "' OFFLINE")
                     embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
                     embed.set_footer(text=datetime.now(tz=None))
                     await channel.send(embed=embed)
                 except AttributeError:
-                    traceback.print_exc()
+                    logging.debug(traceback.print_exc())
                 except:
                     #await ctx.send("Unexpected error:", sys.exc_info()[0])
-                    print("Unexpected error:", sys.exc_info()[0])
+                    logging.debug("Unexpected error:", sys.exc_info()[0])
+                    
+
 
                 #embed=discord.Embed(title=name, description="Online", color=0x185e0d)
                 #embed.add_field(name="Players ", value=players_online + "/" + players_max, inline=True)
@@ -76,10 +78,11 @@ async def Background_Monitor_Task(self, config, CHANNEL_ID):
 
         except Error as e:
             #await ctx.send(":thumbsdown: Error reading data from MySQL table \n" + e)
-            print("Error reading data from MySQL table \n" + e)
+            logging.debug("Error reading data from MySQL table \n" + e)
         finally:
             if (conn.is_connected()):
                 conn.close()
                 mycursor.close()
+                logging.info("MySQL connection closed")
 
         await asyncio.sleep(30) # task runs every 30 seconds
