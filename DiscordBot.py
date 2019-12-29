@@ -51,5 +51,5 @@ SelfUpdateCommand.run(Bot, config['UPDATE']['Url'], config['UPDATE']['SaveFile']
 SelfStopCommand.run(Bot)
 
 
-Bot.add_cog(MinecraftServerMonitor.MyCog(Bot, config, GUILD, CHANNEL_ID))
+Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Tast(Bot, config, CHANNEL_ID))
 Bot.run(TOKEN)
