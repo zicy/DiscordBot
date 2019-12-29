@@ -9,14 +9,14 @@ config.sections()
 config.read('settings.cfg')
 
 TOKEN = config['BOT']['Token']
-GUILD = config['BOT']['Guild']
-CHANNEL_ID = config['BOT']['Channel_ID']
+GUILD = int(config['BOT']['Guild'])
+CHANNEL_ID = int(config['BOT']['Channel_ID'])
 DEV = config['BOT']['Dev']
 
 DESCRIPTION = '''Im here to help'''
 VERSION = "CraftersBot V0.1-dev"
 
-Bot = commands.Bot(command_prefix="!", description=DESCRIPTION,case_insensitive=True)
+Bot = commands.Bot(command_prefix="!", description=DESCRIPTION, case_insensitive=True)
 
 @Bot.event
 async def on_ready():
@@ -30,6 +30,8 @@ async def on_ready():
     print("---[ Bot Started ]---")
     await Bot.change_presence(status=discord.Status.idle, activity=discord.Activity(name=VERSION, type=1))
     print("")
+
+    Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Task(Bot, config, CHANNEL_ID))
 
 
 # !Ping
@@ -51,5 +53,5 @@ SelfUpdateCommand.run(Bot, config['UPDATE']['Url'], config['UPDATE']['SaveFile']
 SelfStopCommand.run(Bot)
 
 
-Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Tast(Bot, config, CHANNEL_ID))
+
 Bot.run(TOKEN)

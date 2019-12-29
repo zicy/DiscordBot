@@ -7,6 +7,7 @@ import traceback
 ### Status Script
 
 import discord
+import asyncio
 from discord.ext import tasks, commands
 ### Status Script
 from mcstatus import MinecraftServer
@@ -15,9 +16,8 @@ from datetime import datetime
 ### Status Script
 
 
-async def Background_Monitor_Tast(self, config, CHANNEL_ID):
+async def Background_Monitor_Task(self, config, CHANNEL_ID):
     await self.wait_until_ready()
-    counter = 0
     channel = self.get_channel(CHANNEL_ID)
 
     while not self.is_closed():
@@ -58,9 +58,9 @@ async def Background_Monitor_Tast(self, config, CHANNEL_ID):
 
                 except OSError as err:
                     print("Server: '" + name + "' OFFLINE")
-                    #embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
-                    #embed.set_footer(text=datetime.now(tz=None))
-                    #await channel.send(embed=embed)
+                    embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
+                    embed.set_footer(text=datetime.now(tz=None))
+                    await channel.send(embed=embed)
                 except AttributeError:
                     traceback.print_exc()
                 except:
@@ -82,7 +82,4 @@ async def Background_Monitor_Tast(self, config, CHANNEL_ID):
                 conn.close()
                 mycursor.close()
 
-
-        counter += 1
-        await channel.send(counter)
-        await asyncio.sleep(60) # task runs every 60 seconds
+        await asyncio.sleep(30) # task runs every 30 seconds
