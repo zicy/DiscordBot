@@ -23,56 +23,56 @@ async def Background_Monitor_Tast(self, config, CHANNEL_ID):
     while not self.is_closed():
 
         try:
-        conn = mysql.connector.connect(
-            host=config['DATABASE']['Host'],
-            user=config['DATABASE']['User'],
-            passwd=config['DATABASE']['Password'],
-            database=config['DATABASE']['Database']
-        )
+            conn = mysql.connector.connect(
+                host=config['DATABASE']['Host'],
+                user=config['DATABASE']['User'],
+                passwd=config['DATABASE']['Password'],
+                database=config['DATABASE']['Database']
+            )
 
-        mycursor = conn.cursor()
-        mycursor.execute("SELECT id,name,ip,game_port FROM mcp_server WHERE game_port != '0'")
-        myresult = mycursor.fetchall()
+            mycursor = conn.cursor()
+            mycursor.execute("SELECT id,name,ip,game_port FROM mcp_server WHERE game_port != '0'")
+            myresult = mycursor.fetchall()
 
-        for data in myresult:
-            id=data[0]
-            name=data[1]
-            ip=data[2]
-            game_port=data[3]
+            for data in myresult:
+                id=data[0]
+                name=data[1]
+                ip=data[2]
+                game_port=data[3]
 
-            # Default values  await self.channel.send("Ussage: !status <server> \nExample: !server novus")
-            latency=-1
-            players_online=0
-            players_max=0
-            version="Unknown"
+                # Default values  await self.channel.send("Ussage: !status <server> \nExample: !server novus")
+                latency=-1
+                players_online=0
+                players_max=0
+                version="Unknown"
 
-            try:
-                server = MinecraftServer.lookup("{0}:{1}".format(ip, game_port))
-                status = server.status()
+                try:
+                    server = MinecraftServer.lookup("{0}:{1}".format(ip, game_port))
+                    status = server.status()
 
-                latency=format(status.latency)
-                players_online=format(status.players.online)
-                players_max=format(status.players.max)
-                version=format(status.version.name)
-                description=status.description
+                    latency=format(status.latency)
+                    players_online=format(status.players.online)
+                    players_max=format(status.players.max)
+                    version=format(status.version.name)
+                    description=status.description
 
-            except OSError as err:
-                print("Server: '" + name + "' OFFLINE")
-                #embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
+                except OSError as err:
+                    print("Server: '" + name + "' OFFLINE")
+                    #embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
+                    #embed.set_footer(text=datetime.now(tz=None))
+                    #await channel.send(embed=embed)
+                except AttributeError:
+                    traceback.print_exc()
+                except:
+                    #await ctx.send("Unexpected error:", sys.exc_info()[0])
+                    print("Unexpected error:", sys.exc_info()[0])
+
+                #embed=discord.Embed(title=name, description="Online", color=0x185e0d)
+                #embed.add_field(name="Players ", value=players_online + "/" + players_max, inline=True)
+                #embed.add_field(name="Latency", value=latency, inline=True)
+                #embed.add_field(name="Version", value=version, inline=False)
                 #embed.set_footer(text=datetime.now(tz=None))
-                #await channel.send(embed=embed)
-            except AttributeError:
-                traceback.print_exc()
-            except:
-                #await ctx.send("Unexpected error:", sys.exc_info()[0])
-                print("Unexpected error:", sys.exc_info()[0])
-
-            #embed=discord.Embed(title=name, description="Online", color=0x185e0d)
-            #embed.add_field(name="Players ", value=players_online + "/" + players_max, inline=True)
-            #embed.add_field(name="Latency", value=latency, inline=True)
-            #embed.add_field(name="Version", value=version, inline=False)
-            #embed.set_footer(text=datetime.now(tz=None))
-            #await ctx.send(embed=embed)
+                #await ctx.send(embed=embed)
 
         except Error as e:
             #await ctx.send(":thumbsdown: Error reading data from MySQL table \n" + e)
