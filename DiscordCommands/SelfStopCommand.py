@@ -10,8 +10,8 @@ def run(Bot, logging):
     async def _cmd(ctx):
         logging.info("Command !selfstop used by - " + str(ctx.message.author))
 
-        logging.info("Stopping . . .")
         await ctx.send("Stopping . . .")
+        logging.info("Stopping . . .")
         await ctx.bot.close()
 
     @_cmd.error

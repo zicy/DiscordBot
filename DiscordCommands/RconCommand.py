@@ -11,10 +11,12 @@ def run(Bot, logging, GUILD, CHANNEL_ID):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):
                 logging.info("Command !rcon used by - " + str(ctx.message.author))
-                await ctx.send("Response: Pong")
+
+                await ctx.send("Pong")
+                logging.info("Response: Pong!")
 
     @_cmd.error
     async def _cmd_error(ctx, error):
         if isinstance(error, commands.BadArgument):
-            logging.error("Unknown error!")
             await ctx.send("Unknown error!")
+            logging.error("Unknown error!")
