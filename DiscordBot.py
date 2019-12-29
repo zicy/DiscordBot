@@ -5,25 +5,30 @@ from discord.ext import commands
 from DiscordCommands import *
 from BackgroundTask import *
 
+## Read Config
 config = configparser.ConfigParser()
 config.sections()
 config.read('settings.cfg')
 
+## Define static values
 TOKEN = config['BOT']['Token']
 GUILD = int(config['BOT']['Guild'])
 CHANNEL_ID = int(config['BOT']['Channel_ID'])
 DEV = config['BOT']['Dev']
 
+## Setup logger
 logging.basicConfig(
         format='%(asctime)s [Discord] %(levelname)-8s %(message)s',
         level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S')
 
 
+## Bot setup
 DESCRIPTION = '''Im here to help'''
 VERSION = "CraftersBot V0.1-dev"
 
 Bot = commands.Bot(command_prefix="!", description=DESCRIPTION, case_insensitive=True)
+
 
 @Bot.event
 async def on_ready():
@@ -40,26 +45,31 @@ async def on_ready():
 
     Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Task(Bot, logging, config, CHANNEL_ID))
 
-def syslog():
-    pass
+## Commands
 
 # !Ping
 PingCommand.run(Bot, GUILD, CHANNEL_ID)
+logging.info("Loaded: PingCommand - Ping/Pong")
 
 # !Rcon <server> <command>
 RconCommand.run(Bot, GUILD, CHANNEL_ID)
+#logging.info("Loaded: RconCommand")
 
 # !Restart <server> [delay]
 RestartCommand.run(Bot, GUILD, CHANNEL_ID)
+#logging.info("Loaded: RestartCommand")
 
 # !Status <server|all>
 MinecraftStatusCommand.run(Bot, logging, config, GUILD, CHANNEL_ID)
+logging.info("Loaded: MinecraftStatusCommand - Get status about Minecrafter servers")
 
 # !SelfUpdate
-SelfUpdateCommand.run(Bot, logging, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)
+SelfUpdateCommand.run(Bot, logging, config, DEV)
+logging.info("Loaded: SelfUpdateCommand - Update to lates release on from Github")
 
 # !SelfStop
 SelfStopCommand.run(Bot, logging)
+logging.info("Loaded: SelfStopCommand - Stop/ restart the bot")
 
 
 

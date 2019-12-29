@@ -5,12 +5,14 @@ import zipfile
 import os
 
 
-def run(Bot, logging, URL, SAVEFILE, DEV):
+def run(Bot, logging, config, DEV):
 
-    #Bot = self.bot
+    URL = config['UPDATE']['Url']
+    SAVEFILE = config['UPDATE']['SaveFile']
 
     @Bot.command(name="selfupdate")
     async def _cmd(ctx):
+        logging.info("Command !selfupdate used by - " + ctx.message.author)
         
 
         # Fetch update ZIP

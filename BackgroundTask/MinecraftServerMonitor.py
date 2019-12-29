@@ -40,7 +40,7 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                 ip=data[2]
                 game_port=data[3]
 
-                # Default values  await self.channel.send("Ussage: !status <server> \nExample: !server novus")
+                # Default values
                 latency=-1
                 players_online=0
                 players_max=0
@@ -64,20 +64,12 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                 except AttributeError:
                     logging.exception(traceback.print_exc())
                 except:
-                    #await ctx.send("Unexpected error:", sys.exc_info()[0])
+                    await channel.send("Unexpected error:", sys.exc_info()[0])
                     logging.exception("Unexpected error:", sys.exc_info()[0])
-                    
 
-
-                #embed=discord.Embed(title=name, description="Online", color=0x185e0d)
-                #embed.add_field(name="Players ", value=players_online + "/" + players_max, inline=True)
-                #embed.add_field(name="Latency", value=latency, inline=True)
-                #embed.add_field(name="Version", value=version, inline=False)
-                #embed.set_footer(text=datetime.now(tz=None))
-                #await ctx.send(embed=embed)
 
         except Error as e:
-            #await ctx.send(":thumbsdown: Error reading data from MySQL table \n" + e)
+            await channel.send("Error reading data from MySQL table \n" + e)
             logging.debug("Error reading data from MySQL table \n" + e)
         finally:
             if (conn.is_connected()):
@@ -85,4 +77,4 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                 mycursor.close()
                 logging.debug("MySQL connection closed")
 
-        await asyncio.sleep(30) # task runs every 30 seconds
+        await asyncio.sleep(60) # task runs every 30 seconds
