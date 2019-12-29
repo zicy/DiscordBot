@@ -21,5 +21,5 @@ def run(Bot, GUILD, CHANNEL_ID):
     @_cmd.error
     async def _cmd_error(ctx, error):
         if isinstance(error, commands.BadArgument):
+            logging.error("Unknown error!")
             await ctx.send("Unknown error!")
-    

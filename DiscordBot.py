@@ -72,5 +72,5 @@ SelfStopCommand.run(Bot, logging)
 logging.info("Loaded: SelfStopCommand - Stop/ restart the bot")
 
 
-
+## Start Discord Bot
 Bot.run(TOKEN)
