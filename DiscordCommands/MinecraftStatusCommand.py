@@ -23,7 +23,7 @@ def run(Bot, logging, config, GUILD, CHANNEL_ID):
     async def _cmd(ctx, *args):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):
-                 logging.info("Command !status used by - " + ctx.message.author)
+                logging.info("Command !status used by - " + ctx.message.author)
 
                 select_query = ""
                 for var in args:

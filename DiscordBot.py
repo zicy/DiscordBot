@@ -53,7 +53,7 @@ RconCommand.run(Bot, GUILD, CHANNEL_ID)
 RestartCommand.run(Bot, GUILD, CHANNEL_ID)
 
 # !Status <server|all>
-MinecraftStatusCommand.run(Bot, config, GUILD, CHANNEL_ID)
+MinecraftStatusCommand.run(Bot, logging, config, GUILD, CHANNEL_ID)
 
 # !SelfUpdate
 SelfUpdateCommand.run(Bot, logging, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)
