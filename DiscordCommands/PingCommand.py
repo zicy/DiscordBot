@@ -11,7 +11,7 @@ def run(Bot, logging, GUILD, CHANNEL_ID):
                 logging.info("Command !ping used by - " + str(ctx.message.author))
 
                 logging.info("Pong!")
-                await ctx.send("Pong!")
+                await ctx.send("Response: Pong!")
 
     @_cmd.error
     async def _cmd_error(ctx, error):

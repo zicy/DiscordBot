@@ -15,8 +15,10 @@ def run(Bot, logging, GUILD, CHANNEL_ID):
                 cmd = "Restart.sh"
                 if os.path.exists(cmd):
                     await ctx.send("Running " + cmd +  " ...")
+                    logging.info("Response: Ussage: !status <server> \nExample: !server novus")
                 else:        
                     await ctx.send("Error! " + cmd + " don't exist")
+                    logging.info("Response: Ussage: !status <server> \nExample: !server novus")
 
     @_cmd.error
     async def _cmd_error(ctx, error):
