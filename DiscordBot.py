@@ -48,15 +48,15 @@ async def on_ready():
 ## Commands
 
 # !Ping
-PingCommand.run(Bot, GUILD, CHANNEL_ID)
+PingCommand.run(Bot, logging, GUILD, CHANNEL_ID)
 logging.info("Loaded: PingCommand - Ping/Pong")
 
 # !Rcon <server> <command>
-RconCommand.run(Bot, GUILD, CHANNEL_ID)
+RconCommand.run(Bot, logging, GUILD, CHANNEL_ID)
 #logging.info("Loaded: RconCommand")
 
 # !Restart <server> [delay]
-RestartCommand.run(Bot, GUILD, CHANNEL_ID)
+RestartCommand.run(Bot, logging, GUILD, CHANNEL_ID)
 #logging.info("Loaded: RestartCommand")
 
 # !Status <server|all>

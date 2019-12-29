@@ -3,7 +3,7 @@ import os
 from discord.ext import commands
 
 
-def run(Bot, GUILD, CHANNEL_ID):
+def run(Bot, logging, GUILD, CHANNEL_ID):
 
     #Bot = self.bot
 
@@ -11,7 +11,7 @@ def run(Bot, GUILD, CHANNEL_ID):
     async def _cmd(ctx):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):
-                logging.info("Command !restart used by - " + ctx.message.author)
+                logging.info("Command !restart used by - " + str(ctx.message.author))
                 cmd = "Restart.sh"
                 if os.path.exists(cmd):
                     await ctx.send("Running " + cmd +  " ...")

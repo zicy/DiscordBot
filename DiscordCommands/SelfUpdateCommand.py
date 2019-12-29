@@ -12,7 +12,7 @@ def run(Bot, logging, config, DEV):
 
     @Bot.command(name="selfupdate")
     async def _cmd(ctx):
-        logging.info("Command !selfupdate used by - " + ctx.message.author)
+        logging.info("Command !selfupdate used by - " + str(ctx.message.author))
         
 
         # Fetch update ZIP
