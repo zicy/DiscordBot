@@ -57,15 +57,15 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                     description=status.description
 
                 except OSError as err:
-                    logging.info("Server: '" + name + "' OFFLINE")
+                    logging.warning("Server: '" + name + "' OFFLINE")
                     embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
                     embed.set_footer(text=datetime.now(tz=None))
                     await channel.send(embed=embed)
                 except AttributeError:
-                    logging.debug(traceback.print_exc())
+                    logging.exception(traceback.print_exc())
                 except:
                     #await ctx.send("Unexpected error:", sys.exc_info()[0])
-                    logging.debug("Unexpected error:", sys.exc_info()[0])
+                    logging.exception("Unexpected error:", sys.exc_info()[0])
                     
 
 
@@ -83,6 +83,6 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
             if (conn.is_connected()):
                 conn.close()
                 mycursor.close()
-                logging.info("MySQL connection closed")
+                logging.debug("MySQL connection closed")
 
         await asyncio.sleep(30) # task runs every 30 seconds

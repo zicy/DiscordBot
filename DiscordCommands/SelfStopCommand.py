@@ -2,12 +2,13 @@ import discord
 from discord.ext import commands
 
 
-def run(Bot):
+def run(Bot, logging):
 
     #Bot = self.bot
 
     @Bot.command(name="selfstop")
     async def _cmd(ctx):
+        logging.info("Stopping . . .")
         await ctx.send("Stopping . . .")
         await ctx.bot.close()
 
@@ -17,4 +18,5 @@ def run(Bot):
     async def _cmd_error(ctx, error):
         if isinstance(error, commands.BadArgument):
             await ctx.send("Unknown error!")
+            logging.error("Unknown error!")
     

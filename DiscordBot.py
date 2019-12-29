@@ -15,7 +15,7 @@ CHANNEL_ID = int(config['BOT']['Channel_ID'])
 DEV = config['BOT']['Dev']
 
 logging.basicConfig(
-        format='%(asctime)s %(levelname)-8s %(message)s',
+        format='%(asctime)s [Discord] %(levelname)-8s %(message)s',
         level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -56,10 +56,10 @@ RestartCommand.run(Bot, GUILD, CHANNEL_ID)
 MinecraftStatusCommand.run(Bot, config, GUILD, CHANNEL_ID)
 
 # !SelfUpdate
-SelfUpdateCommand.run(Bot, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)
+SelfUpdateCommand.run(Bot, logging, config['UPDATE']['Url'], config['UPDATE']['SaveFile'], DEV)
 
 # !SelfStop
-SelfStopCommand.run(Bot)
+SelfStopCommand.run(Bot, logging)
 
 
 
