@@ -18,7 +18,7 @@ DEV = config['BOT']['Dev']
 
 ## Setup logger
 logging.basicConfig(
-        format='%(asctime)s [Discord] %(levelname)-8s %(message)s',
+        format='%(asctime)s [Discord] %(levelname)-8s %(filename)s %(message)s',
         level=logging.INFO,
         datefmt='%Y-%m-%d %H:%M:%S')
 

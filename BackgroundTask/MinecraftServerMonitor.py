@@ -4,6 +4,7 @@ import mysql.connector
 import socket
 import sys
 import traceback
+import os
 ### Status Script
 
 import discord
@@ -31,7 +32,7 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
             )
 
             mycursor = conn.cursor()
-            mycursor.execute("SELECT id,name,ip,game_port FROM mcp_server WHERE game_port != '0'")
+            mycursor.execute("SELECT id,name,ip,game_port FROM mcp_server WHERE monitor != '0'")
             myresult = mycursor.fetchall()
 
             for data in myresult:
@@ -47,6 +48,7 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                 version="Unknown"
 
                 try:
+                    logging.info("Testing online state of {0} {1}:{2}".format(name, ip, game_port))
                     server = MinecraftServer.lookup("{0}:{1}".format(ip, game_port))
                     status = server.status()
 
@@ -57,7 +59,7 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                     description=status.description
 
                 except OSError as err:
-                    logging.warning("Server: '" + name + "' OFFLINE")
+                    logging.warning("Server: '{0}' OFFLINE".format(name))
                     embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
                     embed.set_footer(text=datetime.now(tz=None))
                     await channel.send(embed=embed)
@@ -77,4 +79,4 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                 mycursor.close()
                 logging.debug("MySQL connection closed")
 
-        await asyncio.sleep(60) # task runs every 30 seconds
+        await asyncio.sleep(int(config['MONITOR']['Interval'])) # task runs every xx seconds
