@@ -4,7 +4,6 @@ import mysql.connector
 import socket
 import sys
 import traceback
-import os
 ### Status Script
 
 import discord
