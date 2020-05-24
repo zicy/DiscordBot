@@ -20,6 +20,7 @@ from datetime import datetime
 def run(Bot, logging, config, GUILD, CHANNEL_ID):
 
     @Bot.command(name='status')
+    @commands.has_permissions(administrator=True)
     async def _cmd(ctx, *args):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):

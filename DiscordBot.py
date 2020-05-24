@@ -1,14 +1,21 @@
-import configparser
+import configparser # remove
 import logging
 import discord
 from discord.ext import commands
-from DiscordCommands import *
-from BackgroundTask import *
+from DiscordBot.DiscordCommands import *
+from DiscordBot.BackgroundTask import *
+
+# Custom functions
+from DiscordBot.Functions import Config
+#import Functions.Config
+
 
 ## Read Config
-config = configparser.ConfigParser()
-config.sections()
-config.read('settings.cfg')
+config = Config.read_config()
+
+#config = configparser.ConfigParser()
+#config.sections()
+#config.read('settings.cfg')
 
 ## Define static values
 TOKEN = config['BOT']['Token']
@@ -33,6 +40,7 @@ Bot = commands.Bot(command_prefix="!", description=DESCRIPTION, case_insensitive
 @Bot.event
 async def on_ready():
     logging.info("Starting Bot")
+    logging.info("Discord.py: " + discord.__version__)
     logging.info("Version: " + VERSION)
     logging.info("Username: " + Bot.user.name)
     logging.info("Bot ID: " + str(Bot.user.id))
@@ -44,6 +52,8 @@ async def on_ready():
     logging.info("")
 
     Bot.loop.create_task(MinecraftServerMonitor.Background_Monitor_Task(Bot, logging, config, CHANNEL_ID))
+    Bot.loop.create_task(MinecraftChatCleanUp.Background_Monitor_Task(Bot, logging, config, CHANNEL_ID))
+    Bot.loop.create_task(BotActivityStatus.Background_Monitor_Task(Bot, logging, config, CHANNEL_ID))
 
 ## Commands
 
@@ -51,12 +61,16 @@ async def on_ready():
 PingCommand.run(Bot, logging, GUILD, CHANNEL_ID)
 logging.info("Loaded: PingCommand - Ping/Pong")
 
+
+MinecraftStatistic.run(Bot, logging, config)
+logging.info("Loaded: MinecraftStatistic - desc here")
+
 # !Rcon <server> <command>
-RconCommand.run(Bot, logging, GUILD, CHANNEL_ID)
+#RconCommand.run(Bot, logging, GUILD, CHANNEL_ID)
 #logging.info("Loaded: RconCommand")
 
 # !Restart <server> [delay]
-RestartCommand.run(Bot, logging, GUILD, CHANNEL_ID)
+#RestartCommand.run(Bot, logging, GUILD, CHANNEL_ID)
 #logging.info("Loaded: RestartCommand")
 
 # !Status <server|all>

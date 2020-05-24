@@ -11,6 +11,7 @@ def run(Bot, logging, config, DEV):
     SAVEFILE = config['UPDATE']['SaveFile']
 
     @Bot.command(name="selfupdate")
+    @commands.has_permissions(administrator=True)
     async def _cmd(ctx):
         logging.info("Command !selfupdate used by - " + str(ctx.message.author))
         

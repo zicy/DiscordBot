@@ -2,6 +2,7 @@
 Token = "TOKEN"
 Guild = "GUILD"
 Channel_ID ="CHANNEL_ID"
+AdminNotificationChannel = 0000000000
 Dev = False
 
 [UPDATE]
@@ -19,3 +20,14 @@ Database = Database
 
 [MONITOR]
 Interval = 600
+
+[MONITOR_STATUS]
+
+
+[ACTIVITY]
+Update = 60
+
+[MC_CHAT_CLEANUP]
+Interval = 600
+CleanupTime = 1
+Channel_ID = 000000000000

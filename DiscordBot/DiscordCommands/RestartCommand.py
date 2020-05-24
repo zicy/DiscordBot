@@ -8,6 +8,7 @@ def run(Bot, logging, GUILD, CHANNEL_ID):
     #Bot = self.bot
 
     @Bot.command(name="restart")
+    @commands.has_permissions(administrator=True)
     async def _cmd(ctx):
         if ctx.message.guild.id == int(GUILD):
             if ctx.message.channel.id == int(CHANNEL_ID):

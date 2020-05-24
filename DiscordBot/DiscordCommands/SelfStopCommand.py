@@ -7,6 +7,7 @@ def run(Bot, logging):
     #Bot = self.bot
 
     @Bot.command(name="selfstop")
+    @commands.has_permissions(administrator=True)
     async def _cmd(ctx):
         logging.info("Command !selfstop used by - " + str(ctx.message.author))
 

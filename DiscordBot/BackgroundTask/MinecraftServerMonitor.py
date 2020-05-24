@@ -14,11 +14,11 @@ from mcstatus import MinecraftServer
 from mysql.connector import Error
 from datetime import datetime
 ### Status Script
-
+from DiscordBot.Functions import Config
 
 async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
     await self.wait_until_ready()
-    channel = self.get_channel(CHANNEL_ID)
+    admin_notification_channel = self.get_channel(int(config['BOT']['AdminNotificationChannel']))
 
     while not self.is_closed():
 
@@ -57,20 +57,24 @@ async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
                     version=format(status.version.name)
                     description=status.description
 
+                    Config.update_config(config, 'MONITOR_STATUS', '{}-online'.format(name), 'True')
                 except OSError as err:
                     logging.warning("Server: '{0}' OFFLINE".format(name))
                     embed=discord.Embed(title=name, description="Offline", color=0xcc0000)
                     embed.set_footer(text=datetime.now(tz=None))
-                    await channel.send(embed=embed)
+                    await admin_notification_channel.send(embed=embed)
+
+                    Config.update_config(config, 'MONITOR_STATUS', '{}-online'.format(name), 'False')
+
                 except AttributeError:
                     logging.exception(traceback.print_exc())
                 except:
-                    await channel.send("Unexpected error:", sys.exc_info()[0])
+                    await admin_notification_channel.send("Unexpected error:", sys.exc_info()[0])
                     logging.exception("Unexpected error:", sys.exc_info()[0])
 
 
         except Error as e:
-            await channel.send("Error reading data from MySQL table \n" + e)
+            await admin_notification_channel.send("Error reading data from MySQL table \n" + e)
             logging.debug("Error reading data from MySQL table \n" + e)
         finally:
             if (conn.is_connected()):
