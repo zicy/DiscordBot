@@ -92,7 +92,7 @@ def run(Bot, logging, config):
             )
 
             mycursor = conn.cursor(prepared=True)
-            sql = "SELECT type, SUM(count) AS count FROM mcp_stats_lb_players WHERE type = 2 AND server = 0 AND uuid = %s"
+            sql = "SELECT type, SUM(count) AS count FROM mcp_stats_lb_players WHERE type = 6 AND server = 0 AND uuid = %s"
             mycursor.execute(sql, (uuid,))
             myresult = mycursor.fetchall()
             
@@ -103,7 +103,7 @@ def run(Bot, logging, config):
                 for data in myresult:
                     type = data[0]
                 
-                    if type == 2: # playtime
+                    if type == 6: # playtime
                         playtime_sec = int(data[1].decode())
 
                     stats_found = True
