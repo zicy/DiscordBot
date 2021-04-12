@@ -12,60 +12,84 @@ from datetime import datetime, timedelta, timezone
 ### Status Script
 
 
+def convert_to_seconds(s):
+    seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400, "w": 604800}
+    return int(s[:-1]) * seconds_per_unit[s[-1]]
+
+
 async def Background_Monitor_Task(self, logging, config, CHANNEL_ID):
     await self.wait_until_ready()
-    channel = self.get_channel(int(config['MC_CHAT_CLEANUP']['Channel_ID']))
-    admin_notification_channel = self.get_channel(int(config['BOT']['AdminNotificationChannel']))
-    time_to_delete = int(config['MC_CHAT_CLEANUP']['CleanupTime'])
+
+    #channel = self.get_channel(int(config['MC_CHAT_CLEANUP']['Channel_ID']))
+    #admin_notification_channel = self.get_channel(int(config['BOT']['AdminNotificationChannel']))
+    #time_to_delete = int(config['MC_CHAT_CLEANUP']['CleanupTime'])
+
+
 
 
     while not self.is_closed():
 
-        ### Delete messages
-        try:
-            date = datetime.utcnow() - timedelta(minutes=time_to_delete)
+        sections = list(filter(lambda x:'-OPTIONS' in x, config.sections()))
+        for guild_options in sections: 
+            channels_clean = config[guild_options]['Purge_Chats']
+            notification_channel = self.get_channel(int(config[guild_options]['Admin_Notification_Channel']))
+            channels = channels_clean.split(',')
 
-            deleted = await channel.purge(limit=200, before=date)
+            for channel_options in channels:
+                options = channel_options.split(".")
+                channel = options[0]
+                time_delete = options[1]
+                time_to_delete = convert_to_seconds(time_delete)
+    
+                print("Guild: " + guild_options + " Channel: " + channel + " Delete older than: " + str(time_to_delete))
 
-            if len(deleted) != 0:
-                delete_success = True
-            else:
-                delete_success = False
-        except discord.Forbidden as e:
-            delete_success = False
+                channel = self.get_channel(int(channel))
+                time_to_delete = time_to_delete
+                
+                ### Delete messages
+                try:
+                    date = datetime.utcnow() - timedelta(seconds=time_to_delete)
 
-            try:
-                await admin_notification_channel.send("Permission error in channel '{}' message '{}'".format(channel.name, e), delete_after=10)
+                    deleted = await channel.purge(limit=200, before=date, check=lambda msg: not msg.pinned)
 
-            except discord.Forbidden as e:
-                logging.error("Permission error in channel '{}' message '{}'".format(admin_notification_channel.name, e))
+                    if len(deleted) != 0:
+                        delete_success = True
+                    else:
+                        delete_success = False
+                except discord.Forbidden as e:
+                    delete_success = False
 
-            except:
-                logging.error("Unexpected error:", sys.exc_info()[0])
+                    try:
+                        await notification_channel.send("Permission error in channel '{}' message '{}'".format(channel.name, e), delete_after=10)
 
-        except:
-            delete_success = False
-            logging.error("Unexpected error:", sys.exc_info()[0])
+                    except discord.Forbidden as e:
+                        logging.error("Permission error in channel '{}' message '{}'".format(notification_channel.name, e))
 
-        ### Report number of delete messages
-        try:
-            if delete_success:
+                    except:
+                        logging.error("Unexpected error:", sys.exc_info()[0])
 
-                delete_self_after = 120
-                current_time = datetime.utcnow()
+                except:
+                    delete_success = False
+                    logging.error("Unexpected error:", str(sys.exc_info()[0]))
 
-                embed=discord.Embed(title="Minecraft Chat cleanup", color=0x0696bf, timestamp=current_time)
-                embed.add_field(name="Deleted messages older than {} minute(s)".format(time_to_delete), value=len(deleted), inline=True)
-                embed.add_field(name="Auto deleted this message after", value="{} sec".format(delete_self_after), inline=True)
-                embed.set_footer(text=self.user)
+                ### Report number of delete messages
+                try:
+                    if delete_success:
 
-                await admin_notification_channel.send(embed=embed, delete_after=delete_self_after)
+                        delete_self_after = 300
+                        current_time = datetime.utcnow()
 
-        except discord.Forbidden as e:
-            logging.error("Permission error in channel '{}' message '{}'".format(channel, e))
+                        embed=discord.Embed(title="Cleaned up messages in '{}'".format(channel.name), color=0x0696bf, timestamp=current_time)
+                        embed.add_field(name="Deleted messages older than {}".format(time_delete), value=len(deleted), inline=True)
+                        embed.set_footer(text=self.user)
 
-        except:
-            logging.error("Unexpected error:", sys.exc_info()[0])
+                        await notification_channel.send(embed=embed, delete_after=delete_self_after)
+
+                except discord.Forbidden as e:
+                    logging.error("Permission error in channel '{}' message '{}'".format(channel, e))
+
+                except:
+                    logging.error("Unexpected error:", sys.exc_info()[0])
 
 
         await asyncio.sleep(int(config['MC_CHAT_CLEANUP']['Interval'])) # task runs every xx seconds
